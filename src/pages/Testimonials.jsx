@@ -1,22 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { db } from "../services/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 function Testimonials() {
-
-  const defaultTestimonials = [
-    {
-      name: "Amit",
-      review: "Amazing gym! Great trainers and results.",
-    },
-    {
-      name: "Sneha",
-      review: "Lost 10kg in 3 months. Highly recommend!",
-    },
-    {
-      name: "Raj",
-      review: "Best fitness platform I've used.",
-    },
-  ];
 
   const [testimonials, setTestimonials] = useState([]);
   const [formData, setFormData] = useState({
@@ -24,14 +11,22 @@ function Testimonials() {
     review: ""
   });
 
-  // LOAD FROM STORAGE
+  // FETCH FROM FIREBASE
   useEffect(() => {
-    const stored = localStorage.getItem("testimonials");
-    if (stored) {
-      setTestimonials(JSON.parse(stored));
-    } else {
-      setTestimonials(defaultTestimonials);
-    }
+    const fetchTestimonials = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "testimonials"));
+        const data = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setTestimonials(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTestimonials();
   }, []);
 
   // HANDLE INPUT
@@ -43,7 +38,7 @@ function Testimonials() {
   };
 
   // HANDLE SUBMIT
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.name || !formData.review) {
@@ -51,35 +46,39 @@ function Testimonials() {
       return;
     }
 
-    const updated = [...testimonials, formData];
+    try {
+      const docRef = await addDoc(collection(db, "testimonials"), formData);
 
-    setTestimonials(updated);
-    localStorage.setItem("testimonials", JSON.stringify(updated));
+      // UPDATE UI instantly
+      setTestimonials([
+        ...testimonials,
+        { id: docRef.id, ...formData }
+      ]);
 
-    setFormData({ name: "", review: "" });
+      setFormData({ name: "", review: "" });
+
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="bg-black text-white min-h-screen p-8">
 
-      {/* HEADER */}
       <h1 className="text-4xl font-bold mb-4">
         Testimonials
       </h1>
 
-      {/* INTRO */}
       <p className="text-gray-400 max-w-2xl mb-10">
-        Hear what our members have to say about their journey with us. 
-        Real transformations, real feedback, and real results from people 
-        who trusted our platform to improve their fitness and lifestyle.
+        Hear what our members have to say about their journey with us.
       </p>
 
       {/* TESTIMONIAL CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
 
-        {testimonials.map((t, index) => (
+        {testimonials.map((t) => (
           <motion.div
-            key={index}
+            key={t.id}
             whileHover={{ scale: 1.05, y: -5 }}
             className="bg-gradient-to-b from-[#111] to-[#1a1a1a] 
                        border border-gray-700 
@@ -99,7 +98,7 @@ function Testimonials() {
 
       </div>
 
-      {/* ADD TESTIMONIAL FORM */}
+      {/* FORM */}
       <div className="max-w-xl mx-auto">
 
         <div className="bg-gradient-to-b from-[#111] to-[#1a1a1a] 
@@ -112,18 +111,16 @@ function Testimonials() {
           </h2>
 
           <p className="text-gray-400 mb-6 text-sm">
-            Your feedback helps others make better decisions.
+            Your feedback helps others.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            {/* NAME */}
             <div>
               <label className="text-sm text-gray-400">Name</label>
               <input
                 type="text"
                 name="name"
-                placeholder="Enter your name"
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
@@ -131,12 +128,10 @@ function Testimonials() {
               />
             </div>
 
-            {/* REVIEW */}
             <div>
               <label className="text-sm text-gray-400">Your Review</label>
               <textarea
                 name="review"
-                placeholder="Write your experience..."
                 value={formData.review}
                 onChange={handleChange}
                 className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
@@ -144,7 +139,6 @@ function Testimonials() {
               />
             </div>
 
-            {/* BUTTON */}
             <button
               type="submit"
               className="w-full bg-orange-500 py-3 rounded-full hover:bg-orange-600 transition"
