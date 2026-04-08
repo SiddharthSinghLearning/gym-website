@@ -67,7 +67,7 @@ function Navbar() {
             <ul className="absolute left-0 top-full mt-2 bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 w-44 z-50">
              
               <li><Link to="/competitions">Competitions</Link></li>
-              <li><Link to="/calories">Calories</Link></li>
+              <li><Link to="/calories">Calorie Tracker</Link></li>
               <li><Link to="/planner">Planner</Link></li>
             </ul>
           )}
