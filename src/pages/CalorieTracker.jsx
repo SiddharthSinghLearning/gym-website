@@ -139,16 +139,22 @@ function CalorieTracker() {
 
   // ================= UI =================
   return (
-    <div className="bg-black text-white min-h-screen p-6 flex flex-col items-center">
+  <div className="bg-black text-white min-h-screen p-6 flex flex-col items-center">
 
-      <h1 className="text-4xl font-bold mb-2">Calorie Tracker</h1>
-      <p className="text-gray-400 mb-8">
-        Track your body metrics and daily calorie intake
-      </p>
+    {/* HEADER */}
+    <h1 className="text-4xl font-bold mb-2">Calorie Tracker</h1>
+    <p className="text-gray-400 mb-8">
+      Track your body metrics and daily calorie intake
+    </p>
 
-      {/* BMI */}
-      <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md shadow-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">BMI & Maintenance Calories</h2>
+    {/* 🔥 TWO COLUMN LAYOUT */}
+    <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+      {/* ================= BMI SECTION ================= */}
+      <div className="bg-gray-900 p-6 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">
+          BMI & Maintenance Calories
+        </h2>
 
         <div className="space-y-3">
           <input type="number" placeholder="Weight (kg)" value={weight}
@@ -171,7 +177,7 @@ function CalorieTracker() {
           </select>
 
           <button onClick={calculate}
-            className="w-full bg-red-500 py-2 rounded">
+            className="w-full bg-red-500 py-2 rounded hover:bg-red-600">
             Calculate
           </button>
 
@@ -184,8 +190,8 @@ function CalorieTracker() {
         </div>
       </div>
 
-      {/* MEALS */}
-      <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md shadow-lg mb-8">
+      {/* ================= MEAL TRACKER ================= */}
+      <div className="bg-gray-900 p-6 rounded-xl shadow-lg">
         <h2 className="text-xl font-semibold mb-4">Add Meal</h2>
 
         <input
@@ -203,8 +209,10 @@ function CalorieTracker() {
           className="w-full px-4 py-2 rounded bg-gray-800 mb-3"
         />
 
-        <button onClick={addMeal}
-          className="w-full bg-green-500 py-2 rounded">
+        <button
+          onClick={addMeal}
+          className="w-full bg-green-500 py-2 rounded hover:bg-green-600"
+        >
           Add Meal
         </button>
 
@@ -214,43 +222,53 @@ function CalorieTracker() {
           </p>
         )}
 
-        <div className="mt-4 space-y-2">
-          {meals.map((meal) => (
-            <div
-              key={meal.id}
-              className="bg-gray-800 p-2 rounded flex justify-between items-center"
-            >
-              <span>{meal.name} - {meal.calories} kcal</span>
-
-              <button
-                onClick={() => deleteMeal(meal.id)}
-                className="text-red-400 hover:text-red-600"
+        <div className="mt-4 space-y-2 max-h-60 overflow-y-auto">
+          {meals.length === 0 ? (
+            <p className="text-gray-500 text-sm text-center">
+              No meals added yet
+            </p>
+          ) : (
+            meals.map((meal) => (
+              <div
+                key={meal.id}
+                className="bg-gray-800 p-2 rounded flex justify-between items-center"
               >
-                ✕
-              </button>
-            </div>
-          ))}
+                <span>{meal.name} - {meal.calories} kcal</span>
+
+                <button
+                  onClick={() => deleteMeal(meal.id)}
+                  className="text-red-400 hover:text-red-600"
+                >
+                  🗑
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
-      {/* SUMMARY */}
-      <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">Daily Summary</h2>
-
-        <p>Total Intake: {totalCalories} kcal</p>
-
-        {calories && (
-          <>
-            <p>Maintenance: {calories} kcal</p>
-            <p className="mt-2 font-semibold">
-              {totalCalories > calories ? "Surplus 🔺" : "Deficit 🔻"}
-            </p>
-          </>
-        )}
-      </div>
-
     </div>
-  );
+
+    {/* ================= SUMMARY (FULL WIDTH) ================= */}
+    <div className="bg-gray-900 p-6 rounded-xl w-full max-w-5xl shadow-lg">
+      <h2 className="text-xl font-semibold mb-4">Daily Summary</h2>
+
+      <p>Total Intake: {totalCalories} kcal</p>
+
+      {calories && (
+        <>
+          <p>Maintenance: {calories} kcal</p>
+          <p className="mt-2 font-semibold">
+            {totalCalories > calories
+              ? "Calorie Surplus 🔺"
+              : "Calorie Deficit 🔻"}
+          </p>
+        </>
+      )}
+    </div>
+
+  </div>
+);
 }
 
 export default CalorieTracker;
