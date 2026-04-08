@@ -24,10 +24,10 @@ function Home() {
 
       {/* CURSOR GLOW */}
       <motion.div
-        className="fixed top-0 left-0 w-96 h-96 bg-red-500/20 rounded-full blur-[120px] pointer-events-none z-0"
+        className="fixed top-0 left-0 w-48 h-48 bg-red-500/20 rounded-full blur-[80px] pointer-events-none z-0"
         style={{
-          x: useTransform(mouseX, (v) => v - 200),
-          y: useTransform(mouseY, (v) => v - 200),
+          x: useTransform(mouseX, (v) => v - 100),
+          y: useTransform(mouseY, (v) => v - 100),
         }}
       />
 
