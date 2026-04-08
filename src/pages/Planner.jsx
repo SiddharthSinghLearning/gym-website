@@ -27,7 +27,7 @@ function Planner() {
   const [selectedDay, setSelectedDay] = useState("Monday");
   const [workouts, setWorkouts] = useState([]);
 
-  // 🔹 Fetch workouts
+  // Fetch workouts
   useEffect(() => {
     const fetchWorkouts = async () => {
       if (!user) return;
@@ -90,13 +90,13 @@ function Planner() {
     }
   };
 
-  // 🔹 Delete
+  // Delete
   const removeWorkout = async (id) => {
     await deleteDoc(doc(db, "workouts", id));
     setWorkouts(workouts.filter((w) => w.id !== id));
   };
 
-  // 🔹 Toggle complete
+  // Toggle complete
   const toggleComplete = async (item) => {
     const ref = doc(db, "workouts", item.id);
 
@@ -116,7 +116,7 @@ function Planner() {
   return (
   <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen p-6">
 
-    {/* 🔥 HEADER */}
+    {/* HEADER */}
     <h1 className="text-4xl font-bold mb-8 text-center">
       Workout Planner
     </h1>
@@ -138,7 +138,7 @@ function Planner() {
       ))}
     </div>
 
-    {/* 🔥 STATS CARDS */}
+    {/* STATS CARDS */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto mb-10">
       <div className="bg-gray-900 p-6 rounded-xl shadow-lg text-center">
         <p className="text-gray-400">Total</p>
@@ -160,7 +160,7 @@ function Planner() {
       </div>
     </div>
 
-    {/* 🔥 ADD WORKOUT CARD */}
+    {/* ADD WORKOUT CARD */}
     <div className="bg-gray-900 p-6 rounded-xl shadow-lg max-w-5xl mx-auto mb-10">
       <h2 className="text-xl font-semibold mb-4">Add Workout</h2>
 
@@ -212,7 +212,7 @@ function Planner() {
       </button>
     </div>
 
-    {/* 🔥 WORKOUT LIST */}
+    {/* WORKOUT LIST */}
     <div className="max-w-5xl mx-auto">
 
       {filtered.length === 0 ? (

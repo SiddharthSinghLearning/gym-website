@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ important
+  const [loading, setLoading] = useState(true); // important
 
   const logout = async () => {
     await signOut(auth);
@@ -17,7 +17,7 @@ function AuthProvider({ children }) {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log("Auth state:", currentUser); // DEBUG
 
-      // ✅ STORE FULL FIREBASE USER
+      // STORE FULL FIREBASE USER
       setUser(currentUser);
 
       setLoading(false); // stop loading AFTER auth resolves

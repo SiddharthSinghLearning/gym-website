@@ -18,7 +18,7 @@ function Contact() {
   return (
     <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen px-6 py-12">
 
-      {/* 🔥 HEADER */}
+      {/* HEADER */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-2">Contact Us</h1>
         <p className="text-gray-400">
@@ -26,7 +26,7 @@ function Contact() {
         </p>
       </div>
 
-      {/* 🔥 MAIN GRID */}
+      {/* MAIN GRID */}
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
 
         {/* 🔹 LEFT SIDE - CONTACT INFO */}
@@ -59,7 +59,7 @@ function Contact() {
 
         </div>
 
-        {/* 🔹 RIGHT SIDE - FORM */}
+        {/* RIGHT SIDE - FORM */}
         <form
           onSubmit={handleSubmit}
           className="bg-gray-900 p-8 rounded-xl shadow-lg space-y-5"

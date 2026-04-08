@@ -42,7 +42,7 @@ function Plans() {
     yearly: { label: "12 Months", multiplier: 12, discount: 0.3 }
   };
 
-  // 🔹 PRICE CALCULATION
+  // PRICE CALCULATION
   const getPrice = (base) => {
     const { multiplier, discount } = durationOptions[duration];
     const total = base * multiplier;
@@ -90,7 +90,7 @@ function Plans() {
         Current Plan: <span className="text-white font-semibold">{subscription}</span>
       </p>
 
-      {/* 🔥 DURATION SELECTOR */}
+      {/* DURATION SELECTOR */}
       <div className="flex justify-center gap-3 mb-10 flex-wrap">
         {Object.keys(durationOptions).map((key) => (
           <button
@@ -107,7 +107,7 @@ function Plans() {
         ))}
       </div>
 
-      {/* 🔥 PLAN CARDS */}
+      {/* PLAN CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
 
   {plans.map((plan, index) => {
@@ -135,12 +135,12 @@ function Plans() {
         `}
       >
 
-        {/* 🔥 BADGE */}
+        {/* BADGE */}
         <div className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-black border border-gray-700">
           {plan.name}
         </div>
 
-        {/* 🔥 ELITE TAG */}
+        {/* ELITE TAG */}
         {isElite && (
           <div className="absolute -top-3 left-4 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold">
             MOST POPULAR
@@ -204,7 +204,7 @@ function Plans() {
 
 </div>
 
-      {/* 🔥 FORM */}
+      {/* FORM */}
       <div className="max-w-xl mx-auto">
 
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">

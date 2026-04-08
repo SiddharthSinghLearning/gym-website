@@ -74,7 +74,7 @@ function Dashboard() {
     localStorage.setItem("stats", JSON.stringify(stats));
   }, [stats]);
 
-  // ✅ FETCH PROFILE FROM FIRESTORE
+  // FETCH PROFILE FROM FIRESTORE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -100,7 +100,7 @@ function Dashboard() {
     fetchProfile();
   }, [user]);
 
-  // ✅ SAVE PROFILE
+  // SAVE PROFILE
   const saveProfile = async () => {
     if (!profile.name) {
       alert("Name is required");
@@ -177,7 +177,7 @@ function Dashboard() {
         <p className="text-gray-400 mt-2">{user?.email}</p>
       </div>
 
-      {/* ✅ PROFILE SECTION */}
+      {/* PROFILE SECTION */}
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Your Profile</h2>
