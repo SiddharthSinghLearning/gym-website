@@ -47,6 +47,13 @@ function Navbar() {
           <Link to="/">Home</Link>
         </li>
 
+        
+
+        
+        <li><Link to="/trainers">Trainers</Link></li>
+        <li><Link to="/plans">Plans</Link></li>
+        <li><Link to="/testimonials">Testimonials</Link></li>
+        
         {/* FEATURES DROPDOWN (CLICK BASED) */}
         <li className="relative" ref={featureRef}>
           <span
@@ -58,16 +65,14 @@ function Navbar() {
 
           {featureOpen && (
             <ul className="absolute left-0 top-full mt-2 bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 w-44 z-50">
-              <li><Link to="/trainers">Trainers</Link></li>
-              <li><Link to="/plans">Plans</Link></li>
+             
+              <li><Link to="/competitions">Competitions</Link></li>
               <li><Link to="/calories">Calories</Link></li>
               <li><Link to="/planner">Planner</Link></li>
             </ul>
           )}
         </li>
-
-        <li><Link to="/competitions">Competitions</Link></li>
-        <li><Link to="/testimonials">Testimonials</Link></li>
+        
         <li><Link to="/contact">Contact</Link></li>
 
       </ul>
