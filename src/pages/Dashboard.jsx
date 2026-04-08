@@ -3,18 +3,16 @@ import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore"; 
-import { db } from "../services/firebase"; // 
+import { db } from "../services/firebase";
 
 function Dashboard() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Prevent crash if user not loaded yet
   if (!user) {
     return <div className="text-white p-6">Loading...</div>;
   }
 
-  // DEFAULT PLAN
   const defaultPlan = {
     Monday: ["Chest + Triceps", "Bench Press", "Incline DB Press"],
     Tuesday: ["Back + Biceps", "Pull Ups", "Barbell Row"],
@@ -25,7 +23,6 @@ function Dashboard() {
     Sunday: ["Rest Day"]
   };
 
-  // STATES
   const [plan, setPlan] = useState({});
   const [editingPlan, setEditingPlan] = useState(false);
   const [planInput, setPlanInput] = useState("");
@@ -41,7 +38,6 @@ function Dashboard() {
   const [editingStats, setEditingStats] = useState(false);
   const [tempStats, setTempStats] = useState(stats);
 
-  // PROFILE STATE
   const [profile, setProfile] = useState({
     name: "",
     age: "",
@@ -51,7 +47,6 @@ function Dashboard() {
 
   const [editingProfile, setEditingProfile] = useState(false);
 
-  // LOAD LOCAL DATA
   useEffect(() => {
     const savedPlan = localStorage.getItem("workoutPlan");
     const savedSub = localStorage.getItem("subscription");
@@ -62,19 +57,16 @@ function Dashboard() {
     if (savedStats) setStats(JSON.parse(savedStats));
   }, []);
 
-  // SAVE PLAN
   useEffect(() => {
     if (Object.keys(plan).length > 0) {
       localStorage.setItem("workoutPlan", JSON.stringify(plan));
     }
   }, [plan]);
 
-  // SAVE STATS
   useEffect(() => {
     localStorage.setItem("stats", JSON.stringify(stats));
   }, [stats]);
 
-  // FETCH PROFILE FROM FIRESTORE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -84,7 +76,6 @@ function Dashboard() {
         if (docSnap.exists()) {
           setProfile(docSnap.data());
         } else {
-          // First time user → prefill name from Google
           setProfile({
             name: user.displayName || "",
             age: "",
@@ -100,7 +91,6 @@ function Dashboard() {
     fetchProfile();
   }, [user]);
 
-  // SAVE PROFILE
   const saveProfile = async () => {
     if (!profile.name) {
       alert("Name is required");
@@ -115,7 +105,6 @@ function Dashboard() {
     }
   };
 
-  // GET TODAY
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long"
   });
@@ -171,13 +160,11 @@ function Dashboard() {
   return (
     <div className="bg-black text-white min-h-screen p-6">
 
-      {/* HEADER */}
       <div className="mb-10">
         <h1 className="text-4xl font-bold">Welcome back</h1>
         <p className="text-gray-400 mt-2">{user?.email}</p>
       </div>
 
-      {/* PROFILE SECTION */}
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Your Profile</h2>
@@ -224,7 +211,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* STATS */}
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Your Stats</h2>
 
@@ -275,7 +261,6 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* QUICK ACTIONS */}
       <div className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
 
@@ -288,7 +273,7 @@ function Dashboard() {
           </button>
 
           <button
-            onClick={() => navigate("/progress")}
+            onClick={() => navigate("/planner")}
             className="bg-[#1a1a1a] px-6 py-3 rounded-full hover:bg-[#333]"
           >
             Track Progress
@@ -302,9 +287,6 @@ function Dashboard() {
           </span>
         </p>
       </div>
-
-      {/* TODAY PLAN remains unchanged */}
-      {/* (kept your existing code exactly) */}
 
     </div>
   );
