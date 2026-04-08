@@ -4,6 +4,7 @@ function Plans() {
 
   const [subscription, setSubscription] = useState("No Subscription");
   const [selectedPlan, setSelectedPlan] = useState("");
+  const [duration, setDuration] = useState("monthly");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -11,7 +12,6 @@ function Plans() {
     phone: ""
   });
 
-  // LOAD CURRENT PLAN
   useEffect(() => {
     const sub = localStorage.getItem("subscription");
     if (sub) setSubscription(sub);
@@ -20,90 +20,94 @@ function Plans() {
   const plans = [
     {
       name: "Basic",
-      price: "₹999/month",
-      features: [
-        "Gym Access",
-        "Locker Facility",
-        "Basic Equipment Access"
-      ]
+      basePrice: 999,
+      features: ["Gym Access", "Locker Facility", "Basic Equipment Access"]
     },
     {
       name: "Pro",
-      price: "₹1999/month",
-      features: [
-        "All Basic Features",
-        "Group Classes",
-        "Diet Guidance"
-      ]
+      basePrice: 1999,
+      features: ["All Basic Features", "Group Classes", "Diet Guidance"]
     },
     {
       name: "Elite",
-      price: "₹2999/month",
-      features: [
-        "All Pro Features",
-        "Personal Trainer",
-        "Custom Workout Plan",
-        "Priority Support"
-      ]
+      basePrice: 2999,
+      features: ["All Pro Features", "Personal Trainer", "Custom Workout Plan", "Priority Support"]
     }
   ];
 
-  // SELECT PLAN
+  const durationOptions = {
+    monthly: { label: "Monthly", multiplier: 1, discount: 0 },
+    quarterly: { label: "3 Months", multiplier: 3, discount: 0.2 },
+    half: { label: "6 Months", multiplier: 6, discount: 0.25 },
+    yearly: { label: "12 Months", multiplier: 12, discount: 0.3 }
+  };
+
+  // 🔹 PRICE CALCULATION
+  const getPrice = (base) => {
+    const { multiplier, discount } = durationOptions[duration];
+    const total = base * multiplier;
+    const final = total - total * discount;
+    return Math.round(final);
+  };
+
   const handleSelect = (planName) => {
     setSelectedPlan(planName);
   };
 
-  // FORM INPUT
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // SUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!selectedPlan) {
-      alert("Please select a plan first");
-      return;
-    }
-
-    if (!formData.name || !formData.email || !formData.phone) {
-      alert("Please fill all fields");
-      return;
-    }
+    if (!selectedPlan) return alert("Select a plan");
+    if (!formData.name || !formData.email || !formData.phone)
+      return alert("Fill all fields");
 
     const data = {
       ...formData,
-      plan: selectedPlan
+      plan: selectedPlan,
+      duration
     };
 
     localStorage.setItem("subscription", selectedPlan);
     localStorage.setItem("userPlanDetails", JSON.stringify(data));
 
     setSubscription(selectedPlan);
-
     alert("Plan booked successfully!");
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-8">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen p-8">
 
       {/* HEADER */}
-      <h1 className="text-4xl font-bold mb-6">
+      <h1 className="text-4xl font-bold mb-6 text-center">
         Subscription Plans
       </h1>
 
-      <p className="text-gray-400 mb-10">
-        Current Plan:{" "}
-        <span className="text-white font-semibold">
-          {subscription}
-        </span>
+      <p className="text-gray-400 mb-8 text-center">
+        Current Plan: <span className="text-white font-semibold">{subscription}</span>
       </p>
 
-      {/* PLAN CARDS */}
+      {/* 🔥 DURATION SELECTOR */}
+      <div className="flex justify-center gap-3 mb-10 flex-wrap">
+        {Object.keys(durationOptions).map((key) => (
+          <button
+            key={key}
+            onClick={() => setDuration(key)}
+            className={`px-4 py-2 rounded-full transition ${
+              duration === key
+                ? "bg-red-500"
+                : "bg-gray-800 hover:bg-gray-700"
+            }`}
+          >
+            {durationOptions[key].label}
+          </button>
+        ))}
+      </div>
+
+      {/* 🔥 PLAN CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
 
   {plans.map((plan, index) => {
@@ -115,55 +119,80 @@ function Plans() {
     return (
       <div
         key={index}
-        className={`flex flex-col justify-between p-6 rounded-2xl transition-all duration-300 border
-          
-          ${
-            isBasic
-              ? "bg-gradient-to-b from-[#111] to-[#1a1a1a] border-gray-700"
-              : isPro
-              ? "bg-gradient-to-b from-[#0f172a] to-[#1e293b] border-blue-500/30"
-              : "bg-gradient-to-b from-[#1a0f0f] to-[#2a1111] border-orange-500/40"
-          }
+        className={`relative flex flex-col justify-between p-6 rounded-2xl transition-all border
 
-          ${
-            subscription === plan.name
-              ? "ring-2 ring-orange-500"
-              : ""
-          }
+        ${
+          isBasic
+            ? "bg-gray-900 border-gray-800"
+            : isPro
+            ? "bg-gray-900 border-blue-500/40"
+            : "bg-gray-900 border-red-500/40 shadow-[0_10px_40px_rgba(255,0,0,0.2)]"
+        }
 
-          hover:scale-105 
-          hover:shadow-[0_10px_40px_rgba(255,60,0,0.2)]
+        ${subscription === plan.name ? "ring-2 ring-red-500" : ""}
+
+        hover:scale-105 hover:shadow-[0_10px_40px_rgba(255,0,0,0.15)]
         `}
       >
 
+        {/* 🔥 BADGE */}
+        <div className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-black border border-gray-700">
+          {plan.name}
+        </div>
+
+        {/* 🔥 ELITE TAG */}
+        {isElite && (
+          <div className="absolute -top-3 left-4 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold">
+            MOST POPULAR
+          </div>
+        )}
+
         {/* CONTENT */}
         <div>
-          <h2 className="text-2xl font-semibold">
+
+          <h2 className="text-2xl font-semibold mb-1">
             {plan.name}
           </h2>
 
-          <p className="text-xl mt-2">
-            {plan.price}
+          {/* PRICE */}
+          <p className="text-3xl font-bold text-white">
+            ₹{getPrice(plan.basePrice)}
           </p>
 
-          <ul className="mt-4 space-y-2 text-gray-300">
+          <p className="text-sm text-gray-400">
+            {durationOptions[duration].label}
+          </p>
+
+          {/* DISCOUNT */}
+          {duration !== "monthly" && (
+            <p className="text-green-400 text-sm mt-1">
+              Save {durationOptions[duration].discount * 100}%
+            </p>
+          )}
+
+          {/* FEATURES */}
+          <ul className="mt-5 space-y-2 text-gray-300 text-sm">
             {plan.features.map((f, i) => (
-              <li key={i}>• {f}</li>
+              <li key={i}>✓ {f}</li>
             ))}
           </ul>
+
         </div>
 
         {/* BUTTON */}
         <button
           onClick={() => handleSelect(plan.name)}
-          className={`mt-6 py-2 rounded-full transition
+          className={`mt-6 py-2 rounded-full transition font-medium
+
             ${
               isBasic
-                ? "bg-gray-600 hover:bg-gray-500"
+                ? "bg-gray-700 hover:bg-gray-600"
                 : isPro
                 ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-orange-500 hover:bg-orange-600"
+                : "bg-red-500 hover:bg-red-600"
             }
+
+            ${selectedPlan === plan.name ? "opacity-70" : ""}
           `}
         >
           {selectedPlan === plan.name ? "Selected" : "Choose Plan"}
@@ -174,95 +203,68 @@ function Plans() {
   })}
 
 </div>
-      
 
-      {/* FORM (ALWAYS VISIBLE) */}
+      {/* 🔥 FORM */}
       <div className="max-w-xl mx-auto">
 
-  <div className="bg-gradient-to-b from-[#111] to-[#1a1a1a] 
-                  border border-gray-700 
-                  rounded-2xl p-8 
-                  shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
 
-    {/* HEADER */}
-    <h2 className="text-2xl font-semibold mb-2">
-      {selectedPlan
-        ? `Booking: ${selectedPlan} Plan`
-        : "Choose a plan to continue"}
-    </h2>
+          <h2 className="text-2xl font-semibold mb-2">
+            {selectedPlan
+              ? `Booking: ${selectedPlan}`
+              : "Choose a plan to continue"}
+          </h2>
 
-    <p className="text-gray-400 mb-6 text-sm">
-      Fill in your details to activate your membership
-    </p>
+          <p className="text-gray-400 mb-6 text-sm">
+            Fill your details
+          </p>
 
-    {/* FORM */}
-    <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-      {/* NAME */}
-      <div>
-        <label className="text-sm text-gray-400">Full Name</label>
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter your name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
-                     focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+            />
+
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+            />
+
+            <div className="bg-black border border-gray-800 rounded-lg p-3 text-sm">
+              Plan: <span className="text-white">{selectedPlan || "None"}</span><br />
+              Duration: <span className="text-white">{durationOptions[duration].label}</span>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-red-500 py-3 rounded-full hover:bg-red-600 transition"
+            >
+              Confirm Booking
+            </button>
+
+          </form>
+
+        </div>
+
       </div>
-
-      {/* EMAIL */}
-      <div>
-        <label className="text-sm text-gray-400">Email</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
-                     focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
-      </div>
-
-      {/* PHONE */}
-      <div>
-        <label className="text-sm text-gray-400">Phone Number</label>
-        <input
-          type="text"
-          name="phone"
-          placeholder="Enter your number"
-          value={formData.phone}
-          onChange={handleChange}
-          className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
-                     focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
-      </div>
-
-      {/* SELECTED PLAN DISPLAY */}
-      <div className="bg-black border border-gray-700 rounded-lg p-3 text-sm text-gray-300">
-        Selected Plan:{" "}
-        <span className="text-white font-semibold">
-          {selectedPlan || "None"}
-        </span>
-      </div>
-
-      {/* BUTTON */}
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 
-                   py-3 rounded-full font-semibold 
-                   hover:opacity-90 transition"
-      >
-        Confirm Booking
-      </button>
-
-    </form>
-
-  </div>
-
-</div>
 
     </div>
   );

@@ -51,10 +51,10 @@ function Trainers() {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-8">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen p-8">
 
       {/* HEADER */}
-      <h1 className="text-4xl font-bold mb-12">
+      <h1 className="text-4xl font-bold mb-12 text-center">
         Our Trainers
       </h1>
 
@@ -69,10 +69,10 @@ function Trainers() {
               key={index}
               whileHover={{ scale: 1.02, y: -6 }}
               className="flex flex-col md:flex-row rounded-2xl overflow-hidden 
-                         bg-gradient-to-b from-[#111] to-[#1a1a1a]
-                         border border-gray-700
+                         bg-gray-900
+                         border border-gray-800
                          transition-all duration-300
-                         hover:shadow-[0_15px_50px_rgba(255,60,0,0.25)]"
+                         hover:shadow-[0_15px_50px_rgba(255,0,0,0.25)]"
             >
 
               {/* IMAGE */}
@@ -93,22 +93,22 @@ function Trainers() {
                     {trainer.name}
                   </h2>
 
-                  <p className="text-orange-400 mt-1">
+                  <p className="text-red-400 mt-1">
                     {trainer.specialty}
                   </p>
 
                   {/* INFO GRID */}
                   <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
 
-                    <div className="bg-black p-3 rounded-lg border border-gray-700">
+                    <div className="bg-black p-3 rounded-lg border border-gray-800">
                       {trainer.experience}
                     </div>
 
-                    <div className="bg-black p-3 rounded-lg border border-gray-700 text-yellow-400">
+                    <div className="bg-black p-3 rounded-lg border border-gray-800 text-yellow-400">
                       {trainer.rating}
                     </div>
 
-                    <div className="bg-black p-3 rounded-lg border border-gray-700 text-green-400 col-span-2">
+                    <div className="bg-black p-3 rounded-lg border border-gray-800 text-green-400 col-span-2">
                       {trainer.availability}
                     </div>
 
@@ -132,7 +132,7 @@ function Trainers() {
 
                   <button
                     onClick={handleBook}
-                    className="bg-orange-500 px-5 py-2 rounded-full hover:bg-orange-600 transition"
+                    className="bg-red-500 px-5 py-2 rounded-full hover:bg-red-600 transition"
                   >
                     Book Trainer
                   </button>

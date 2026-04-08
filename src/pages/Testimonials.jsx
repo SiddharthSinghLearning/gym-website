@@ -49,7 +49,6 @@ function Testimonials() {
     try {
       const docRef = await addDoc(collection(db, "testimonials"), formData);
 
-      // UPDATE UI instantly
       setTestimonials([
         ...testimonials,
         { id: docRef.id, ...formData }
@@ -63,34 +62,35 @@ function Testimonials() {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-8">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen p-8">
 
-      <h1 className="text-4xl font-bold mb-4">
+      {/* HEADER */}
+      <h1 className="text-4xl font-bold mb-4 text-center">
         Testimonials
       </h1>
 
-      <p className="text-gray-400 max-w-2xl mb-10">
+      <p className="text-gray-400 max-w-2xl mx-auto text-center mb-12">
         Hear what our members have to say about their journey with us.
       </p>
 
       {/* TESTIMONIAL CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto">
 
         {testimonials.map((t) => (
           <motion.div
             key={t.id}
             whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-gradient-to-b from-[#111] to-[#1a1a1a] 
-                       border border-gray-700 
+            className="bg-gray-900 
+                       border border-gray-800 
                        p-6 rounded-2xl 
                        shadow-md
-                       hover:shadow-[0_10px_40px_rgba(255,60,0,0.2)]"
+                       hover:shadow-[0_10px_40px_rgba(255,0,0,0.2)]"
           >
             <p className="text-gray-300 italic mb-4">
               "{t.review}"
             </p>
 
-            <p className="text-orange-400 font-semibold">
+            <p className="text-red-400 font-semibold">
               — {t.name}
             </p>
           </motion.div>
@@ -101,8 +101,8 @@ function Testimonials() {
       {/* FORM */}
       <div className="max-w-xl mx-auto">
 
-        <div className="bg-gradient-to-b from-[#111] to-[#1a1a1a] 
-                        border border-gray-700 
+        <div className="bg-gray-900 
+                        border border-gray-800 
                         rounded-2xl p-8 
                         shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
 
@@ -123,8 +123,8 @@ function Testimonials() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full mt-1 p-3 bg-black border border-gray-800 rounded-lg 
+                           focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
@@ -134,14 +134,14 @@ function Testimonials() {
                 name="review"
                 value={formData.review}
                 onChange={handleChange}
-                className="w-full mt-1 p-3 bg-black border border-gray-700 rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full mt-1 p-3 bg-black border border-gray-800 rounded-lg 
+                           focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-orange-500 py-3 rounded-full hover:bg-orange-600 transition"
+              className="w-full bg-red-500 py-3 rounded-full hover:bg-red-600 transition"
             >
               Submit Testimonial
             </button>
