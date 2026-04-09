@@ -199,6 +199,23 @@ function Plans() {
         Current Plan: <span className="text-white font-semibold">{subscription}</span>
       </p>
 
+      {/* DURATION SELECTOR ADDED BACK */}
+      <div className="flex justify-center gap-3 mb-10 flex-wrap">
+        {Object.keys(durationOptions).map((key) => (
+          <button
+            key={key}
+            onClick={() => setDuration(key)}
+            className={`px-4 py-2 rounded-full transition ${
+              duration === key
+                ? "bg-red-500"
+                : "bg-gray-800 hover:bg-gray-700"
+            }`}
+          >
+            {durationOptions[key].label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         {plans.map((plan, index) => (
           <PlanCard
@@ -214,7 +231,6 @@ function Plans() {
         ))}
       </div>
 
-      {/* ORIGINAL FORM FULLY RESTORED */}
       <div className="max-w-xl mx-auto">
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
 
