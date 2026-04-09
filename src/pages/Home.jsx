@@ -77,47 +77,39 @@ function Home() {
       </section>
 
       {/* FEATURE GRID */}
-      <section className="px-10 py-20 grid md:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
+      <section className="px-10 py-20 grid md:grid-cols-3 gap-8 relative z-10">
 
-  {[
-    {
-      icon: <FaDumbbell />,
-      title: "Training Engine",
-      desc: "Structured progressive overload system"
-    },
-    {
-      icon: <FaFire />,
-      title: "Nutrition Logic",
-      desc: "Track calories with precision"
-    },
-    {
-      icon: <FaChartLine />,
-      title: "Performance Data",
-      desc: "Visualize your improvement"
-    }
-  ].map((item, i) => (
-    <motion.div
-      key={i}
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: i * 0.15 }}
-      whileHover={{ y: -6, scale: 1.02 }}
-      className="bg-white/[0.03] border border-gray-800/60 backdrop-blur-md 
-                 p-6 rounded-xl cursor-pointer transition-all duration-300
-                 hover:border-red-500/40 hover:shadow-[0_0_25px_rgba(239,68,68,0.15)]"
-    >
-      <div className="text-red-500 text-2xl mb-3">{item.icon}</div>
-
-      <h3 className="text-lg font-semibold tracking-wide">
-        {item.title}
-      </h3>
-
-      <p className="text-gray-500 text-sm mt-2 leading-relaxed">
-        {item.desc}
-      </p>
-    </motion.div>
-  ))}
-</section>
+        {[
+          {
+            icon: <FaDumbbell />,
+            title: "Training Engine",
+            desc: "Structured progressive overload system"
+          },
+          {
+            icon: <FaFire />,
+            title: "Nutrition Logic",
+            desc: "Track calories with precision"
+          },
+          {
+            icon: <FaChartLine />,
+            title: "Performance Data",
+            desc: "Visualize your improvement"
+          }
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.2 }}
+            whileHover={{ scale: 1.08 }}
+            className="bg-white/5 border border-gray-800 backdrop-blur-lg p-8 rounded-2xl cursor-pointer transition"
+          >
+            <div className="text-red-500 text-3xl mb-4">{item.icon}</div>
+            <h3 className="text-xl font-bold">{item.title}</h3>
+            <p className="text-gray-400 mt-2">{item.desc}</p>
+          </motion.div>
+        ))}
+      </section>
 
       {/* SECTION 1 */}
       <section className="py-20 px-10 grid md:grid-cols-2 gap-10 items-center">
