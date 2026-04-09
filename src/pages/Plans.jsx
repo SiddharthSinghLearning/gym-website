@@ -1,4 +1,101 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
+// ================= CLASS COMPONENT =================
+class PlanCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    const {
+      plan,
+      subscription,
+      selectedPlan,
+      duration,
+      durationOptions,
+      getPrice,
+      handleSelect
+    } = this.props;
+
+    const isBasic = plan.name === "Basic";
+    const isPro = plan.name === "Pro";
+    const isElite = plan.name === "Elite";
+
+    return (
+      <div
+        className={`relative flex flex-col justify-between p-6 rounded-2xl transition-all border
+
+        ${
+          isBasic
+            ? "bg-gray-900 border-gray-800"
+            : isPro
+            ? "bg-gray-900 border-blue-500/40"
+            : "bg-gray-900 border-red-500/40 shadow-[0_10px_40px_rgba(255,0,0,0.2)]"
+        }
+
+        ${subscription === plan.name ? "ring-2 ring-red-500" : ""}
+
+        hover:scale-105 hover:shadow-[0_10px_40px_rgba(255,0,0,0.15)]
+        `}
+      >
+        <div className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-black border border-gray-700">
+          {plan.name}
+        </div>
+
+        {isElite && (
+          <div className="absolute -top-3 left-4 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold">
+            MOST POPULAR
+          </div>
+        )}
+
+        <div>
+          <h2 className="text-2xl font-semibold mb-1">{plan.name}</h2>
+
+          <p className="text-3xl font-bold text-white">
+            ₹{getPrice(plan.basePrice)}
+          </p>
+
+          <p className="text-sm text-gray-400">
+            {durationOptions[duration].label}
+          </p>
+
+          {duration !== "monthly" && (
+            <p className="text-green-400 text-sm mt-1">
+              Save {durationOptions[duration].discount * 100}%
+            </p>
+          )}
+
+          <ul className="mt-5 space-y-2 text-gray-300 text-sm">
+            {plan.features.map((f, i) => (
+              <li key={i}>✓ {f}</li>
+            ))}
+          </ul>
+        </div>
+
+        <button
+          onClick={() => handleSelect(plan.name)}
+          className={`mt-6 py-2 rounded-full transition font-medium
+
+            ${
+              isBasic
+                ? "bg-gray-700 hover:bg-gray-600"
+                : isPro
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-red-500 hover:bg-red-600"
+            }
+
+            ${selectedPlan === plan.name ? "opacity-70" : ""}
+          `}
+        >
+          {selectedPlan === plan.name ? "Selected" : "Choose Plan"}
+        </button>
+      </div>
+    );
+  }
+}
+// ================= END CLASS COMPONENT =================
+
 
 function Plans() {
 
@@ -12,7 +109,6 @@ function Plans() {
     phone: ""
   });
 
-  // NEW: error state (logic only)
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -45,7 +141,6 @@ function Plans() {
     yearly: { label: "12 Months", multiplier: 12, discount: 0.3 }
   };
 
-  // PRICE CALCULATION
   const getPrice = (base) => {
     const { multiplier, discount } = durationOptions[duration];
     const total = base * multiplier;
@@ -61,54 +156,24 @@ function Plans() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //===========COMPLETE PROP VALIDATION LOGIC==================
-  // This function contains the COMPLETE validation rules
-  // It checks all inputs before form submission
   const validateForm = () => {
     let newErrors = {};
 
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (formData.name.length < 3) {
-      newErrors.name = "Name must be at least 3 characters";
-    }
-
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    // Phone validation
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Phone must be 10 digits";
-    }
-
-    // Plan validation
-    if (!selectedPlan) {
-      newErrors.plan = "Select a plan";
-    }
+    if (!formData.name.trim()) newErrors.name = "Name required";
+    if (!formData.email.trim()) newErrors.email = "Email required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone required";
+    if (!selectedPlan) newErrors.plan = "Select a plan";
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    //Prop Validation logic is called here when you click on submit
-    // UPDATED: use validation instead of simple checks
+
     if (!validateForm()) {
-      // Still keeping alerts (no UI change)
-      if (errors.plan) alert("Select a plan");
-      else alert("Please fill valid details");
+      if (!selectedPlan) alert("Select a plan");
+      else alert("Fill all fields");
       return;
     }
 
@@ -128,125 +193,29 @@ function Plans() {
   return (
     <div className="bg-gradient-to-br from-black via-gray-900 to-black text-white min-h-screen p-8">
 
-      {/* HEADER */}
-      <h1 className="text-4xl font-bold mb-6 text-center">
-        Subscription Plans
-      </h1>
+      <h1 className="text-4xl font-bold mb-6 text-center">Subscription Plans</h1>
 
       <p className="text-gray-400 mb-8 text-center">
         Current Plan: <span className="text-white font-semibold">{subscription}</span>
       </p>
 
-      {/* DURATION SELECTOR */}
-      <div className="flex justify-center gap-3 mb-10 flex-wrap">
-        {Object.keys(durationOptions).map((key) => (
-          <button
-            key={key}
-            onClick={() => setDuration(key)}
-            className={`px-4 py-2 rounded-full transition ${
-              duration === key
-                ? "bg-red-500"
-                : "bg-gray-800 hover:bg-gray-700"
-            }`}
-          >
-            {durationOptions[key].label}
-          </button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        {plans.map((plan, index) => (
+          <PlanCard
+            key={index}
+            plan={plan}
+            subscription={subscription}
+            selectedPlan={selectedPlan}
+            duration={duration}
+            durationOptions={durationOptions}
+            getPrice={getPrice}
+            handleSelect={handleSelect}
+          />
         ))}
       </div>
 
-      {/* PLAN CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-
-        {plans.map((plan, index) => {
-
-          const isBasic = plan.name === "Basic";
-          const isPro = plan.name === "Pro";
-          const isElite = plan.name === "Elite";
-
-          return (
-            <div
-              key={index}
-              className={`relative flex flex-col justify-between p-6 rounded-2xl transition-all border
-
-              ${
-                isBasic
-                  ? "bg-gray-900 border-gray-800"
-                  : isPro
-                  ? "bg-gray-900 border-blue-500/40"
-                  : "bg-gray-900 border-red-500/40 shadow-[0_10px_40px_rgba(255,0,0,0.2)]"
-              }
-
-              ${subscription === plan.name ? "ring-2 ring-red-500" : ""}
-
-              hover:scale-105 hover:shadow-[0_10px_40px_rgba(255,0,0,0.15)]
-              `}
-            >
-
-              <div className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-black border border-gray-700">
-                {plan.name}
-              </div>
-
-              {isElite && (
-                <div className="absolute -top-3 left-4 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold">
-                  MOST POPULAR
-                </div>
-              )}
-
-              <div>
-
-                <h2 className="text-2xl font-semibold mb-1">
-                  {plan.name}
-                </h2>
-
-                <p className="text-3xl font-bold text-white">
-                  ₹{getPrice(plan.basePrice)}
-                </p>
-
-                <p className="text-sm text-gray-400">
-                  {durationOptions[duration].label}
-                </p>
-
-                {duration !== "monthly" && (
-                  <p className="text-green-400 text-sm mt-1">
-                    Save {durationOptions[duration].discount * 100}%
-                  </p>
-                )}
-
-                <ul className="mt-5 space-y-2 text-gray-300 text-sm">
-                  {plan.features.map((f, i) => (
-                    <li key={i}>✓ {f}</li>
-                  ))}
-                </ul>
-
-              </div>
-
-              <button
-                onClick={() => handleSelect(plan.name)}
-                className={`mt-6 py-2 rounded-full transition font-medium
-
-                  ${
-                    isBasic
-                      ? "bg-gray-700 hover:bg-gray-600"
-                      : isPro
-                      ? "bg-blue-500 hover:bg-blue-600"
-                      : "bg-red-500 hover:bg-red-600"
-                  }
-
-                  ${selectedPlan === plan.name ? "opacity-70" : ""}
-                `}
-              >
-                {selectedPlan === plan.name ? "Selected" : "Choose Plan"}
-              </button>
-
-            </div>
-          );
-        })}
-
-      </div>
-
-      {/* FORM */}
+      {/* ORIGINAL FORM FULLY RESTORED */}
       <div className="max-w-xl mx-auto">
-
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
 
           <h2 className="text-2xl font-semibold mb-2">
@@ -255,9 +224,7 @@ function Plans() {
               : "Choose a plan to continue"}
           </h2>
 
-          <p className="text-gray-400 mb-6 text-sm">
-            Fill your details
-          </p>
+          <p className="text-gray-400 mb-6 text-sm">Fill your details</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -267,7 +234,7 @@ function Plans() {
               placeholder="Full Name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg"
             />
 
             <input
@@ -276,7 +243,7 @@ function Plans() {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg"
             />
 
             <input
@@ -285,7 +252,7 @@ function Plans() {
               placeholder="Phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full p-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 bg-black border border-gray-800 rounded-lg"
             />
 
             <div className="bg-black border border-gray-800 rounded-lg p-3 text-sm">
@@ -303,7 +270,6 @@ function Plans() {
           </form>
 
         </div>
-
       </div>
 
     </div>
