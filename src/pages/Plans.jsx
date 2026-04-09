@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 // ================= CLASS COMPONENT =================
 class PlanCard extends React.Component {
   constructor(props) {
-    super(props);
+    super(props); // constructor usage
     this.state = {};
   }
 
   render() {
+    // props usage
     const {
       plan,
       subscription,
@@ -97,6 +99,24 @@ class PlanCard extends React.Component {
 // ================= END CLASS COMPONENT =================
 
 
+// ================= PROP VALIDATION =================
+PlanCard.propTypes = {
+  plan: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    basePrice: PropTypes.number.isRequired,
+    features: PropTypes.arrayOf(PropTypes.string).isRequired
+  }).isRequired,
+
+  subscription: PropTypes.string.isRequired,
+  selectedPlan: PropTypes.string.isRequired,
+  duration: PropTypes.string.isRequired,
+  durationOptions: PropTypes.object.isRequired,
+  getPrice: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func.isRequired
+};
+// ================= END PROP VALIDATION =================
+
+
 function Plans() {
 
   const [subscription, setSubscription] = useState("No Subscription");
@@ -165,13 +185,16 @@ function Plans() {
     if (!selectedPlan) newErrors.plan = "Select a plan";
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
+    const isValid = validateForm(); // FIX: store result
+
+    if (!isValid) {
       if (!selectedPlan) alert("Select a plan");
       else alert("Fill all fields");
       return;
@@ -187,6 +210,11 @@ function Plans() {
     localStorage.setItem("userPlanDetails", JSON.stringify(data));
 
     setSubscription(selectedPlan);
+
+    // reset form after success
+    setFormData({ name: "", email: "", phone: "" });
+    setSelectedPlan("");
+
     alert("Plan booked successfully!");
   };
 
@@ -199,16 +227,15 @@ function Plans() {
         Current Plan: <span className="text-white font-semibold">{subscription}</span>
       </p>
 
-      {/* DURATION SELECTOR ADDED BACK */}
+      {/* Duration selector */}
       <div className="flex justify-center gap-3 mb-10 flex-wrap">
         {Object.keys(durationOptions).map((key) => (
           <button
             key={key}
+            type="button"
             onClick={() => setDuration(key)}
-            className={`px-4 py-2 rounded-full transition ${
-              duration === key
-                ? "bg-red-500"
-                : "bg-gray-800 hover:bg-gray-700"
+            className={`px-4 py-2 rounded-full ${
+              duration === key ? "bg-red-500" : "bg-gray-800"
             }`}
           >
             {durationOptions[key].label}
@@ -216,6 +243,7 @@ function Plans() {
         ))}
       </div>
 
+      {/* Props passing */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         {plans.map((plan, index) => (
           <PlanCard
@@ -231,16 +259,9 @@ function Plans() {
         ))}
       </div>
 
+      {/* FORM */}
       <div className="max-w-xl mx-auto">
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-
-          <h2 className="text-2xl font-semibold mb-2">
-            {selectedPlan
-              ? `Booking: ${selectedPlan}`
-              : "Choose a plan to continue"}
-          </h2>
-
-          <p className="text-gray-400 mb-6 text-sm">Fill your details</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -271,14 +292,9 @@ function Plans() {
               className="w-full p-3 bg-black border border-gray-800 rounded-lg"
             />
 
-            <div className="bg-black border border-gray-800 rounded-lg p-3 text-sm">
-              Plan: <span className="text-white">{selectedPlan || "None"}</span><br />
-              Duration: <span className="text-white">{durationOptions[duration].label}</span>
-            </div>
-
             <button
               type="submit"
-              className="w-full bg-red-500 py-3 rounded-full hover:bg-red-600 transition"
+              className="w-full bg-red-500 py-3 rounded-full"
             >
               Confirm Booking
             </button>
