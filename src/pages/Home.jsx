@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { FaDumbbell, FaFire, FaChartLine } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import img1 from "../assets/gym1.jpg";
@@ -10,6 +10,10 @@ function Home() {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  // 🔥 Smooth (fixes glitch)
+  const smoothX = useSpring(mouseX, { stiffness: 120, damping: 20 });
+  const smoothY = useSpring(mouseY, { stiffness: 120, damping: 20 });
 
   function handleMouseMove(e) {
     mouseX.set(e.clientX);
@@ -26,15 +30,14 @@ function Home() {
       <motion.div
         className="fixed top-0 left-0 w-48 h-48 bg-red-500/20 rounded-full blur-[80px] pointer-events-none z-0"
         style={{
-          x: useTransform(mouseX, (v) => v - 100),
-          y: useTransform(mouseY, (v) => v - 100),
+          x: useTransform(smoothX, (v) => v - 100),
+          y: useTransform(smoothY, (v) => v - 100),
         }}
       />
 
       {/* HERO */}
       <section className="h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
 
-        {/* animated glow behind text */}
         <div className="absolute w-[500px] h-[500px] bg-red-500/10 blur-[120px] rounded-full"></div>
 
         <motion.h1
@@ -68,46 +71,53 @@ function Home() {
           >
             <span className="relative z-10">Enter System →</span>
 
-            {/* animated fill */}
             <div className="absolute inset-0 bg-red-500 translate-y-full group-hover:translate-y-0 transition duration-300"></div>
           </motion.button>
         </Link>
       </section>
 
-      {/* FEATURE GRID (SLIDE IN) */}
-      <section className="px-10 py-20 grid md:grid-cols-3 gap-8 relative z-10">
+      {/* FEATURE GRID */}
+      <section className="px-10 py-20 grid md:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
 
-        {[
-          {
-            icon: <FaDumbbell />,
-            title: "Training Engine",
-            desc: "Structured progressive overload system"
-          },
-          {
-            icon: <FaFire />,
-            title: "Nutrition Logic",
-            desc: "Track calories with precision"
-          },
-          {
-            icon: <FaChartLine />,
-            title: "Performance Data",
-            desc: "Visualize your improvement"
-          }
-        ].map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.2 }}
-            whileHover={{ scale: 1.08 }}
-            className="bg-white/5 border border-gray-800 backdrop-blur-lg p-8 rounded-2xl cursor-pointer transition"
-          >
-            <div className="text-red-500 text-3xl mb-4">{item.icon}</div>
-            <h3 className="text-xl font-bold">{item.title}</h3>
-            <p className="text-gray-400 mt-2">{item.desc}</p>
-          </motion.div>
-        ))}
-      </section>
+  {[
+    {
+      icon: <FaDumbbell />,
+      title: "Training Engine",
+      desc: "Structured progressive overload system"
+    },
+    {
+      icon: <FaFire />,
+      title: "Nutrition Logic",
+      desc: "Track calories with precision"
+    },
+    {
+      icon: <FaChartLine />,
+      title: "Performance Data",
+      desc: "Visualize your improvement"
+    }
+  ].map((item, i) => (
+    <motion.div
+      key={i}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: i * 0.15 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      className="bg-white/[0.03] border border-gray-800/60 backdrop-blur-md 
+                 p-6 rounded-xl cursor-pointer transition-all duration-300
+                 hover:border-red-500/40 hover:shadow-[0_0_25px_rgba(239,68,68,0.15)]"
+    >
+      <div className="text-red-500 text-2xl mb-3">{item.icon}</div>
+
+      <h3 className="text-lg font-semibold tracking-wide">
+        {item.title}
+      </h3>
+
+      <p className="text-gray-500 text-sm mt-2 leading-relaxed">
+        {item.desc}
+      </p>
+    </motion.div>
+  ))}
+</section>
 
       {/* SECTION 1 */}
       <section className="py-20 px-10 grid md:grid-cols-2 gap-10 items-center">
@@ -159,7 +169,7 @@ function Home() {
 
       </section>
 
-      {/* SECTION 3 (FIXED IMAGE) */}
+      {/* SECTION 3 */}
       <section className="py-20 px-10 grid md:grid-cols-2 gap-10 items-center">
 
         <motion.div
@@ -184,10 +194,9 @@ function Home() {
 
       </section>
 
-      {/* CTA (UPGRADED) */}
+      {/* CTA */}
       <section className="py-28 text-center relative">
 
-        {/* glow */}
         <div className="absolute inset-0 bg-red-500/10 blur-3xl"></div>
 
         <motion.div
