@@ -119,6 +119,8 @@ PlanCard.propTypes = {
 
 function Plans() {
 
+
+  //States Usage:
   const [subscription, setSubscription] = useState("No Subscription");
   const [selectedPlan, setSelectedPlan] = useState("");
   const [duration, setDuration] = useState("monthly");
