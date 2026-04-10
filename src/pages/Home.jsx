@@ -11,7 +11,7 @@ function Home() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // 🔥 Smooth (fixes glitch)
+  // Smooth (fixes glitch)
   const smoothX = useSpring(mouseX, { stiffness: 120, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 120, damping: 20 });
 

@@ -6,6 +6,8 @@ import { FaUserCircle } from "react-icons/fa";
 function Navbar() {
   const { user, logout } = useAuth();
 
+
+  //Use of Hooks:
   const [featureOpen, setFeatureOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -67,7 +69,7 @@ function Navbar() {
             <ul className="absolute left-0 top-full mt-2 bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 w-44 z-50">
              
               <li><Link to="/competitions">Competitions</Link></li>
-              <li><Link to="/calories">Calorie Tracker</Link></li>
+              <li><Link to="/calories">Calorie Tracke</Link></li>
               <li><Link to="/planner">Planner</Link></li>
             </ul>
           )}

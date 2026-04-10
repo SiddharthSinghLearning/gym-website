@@ -147,7 +147,7 @@ function CalorieTracker() {
       Track your body metrics and daily calorie intake
     </p>
 
-    {/* 🔥 TWO COLUMN LAYOUT */}
+    {/* TWO COLUMN LAYOUT */}
     <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
       {/* ================= BMI SECTION ================= */}
